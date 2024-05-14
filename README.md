@@ -6,3 +6,5 @@ Some tools for working with logs.
 log-generator.py
 ```
 
+## Notes
+Ensure the frogbot user and project exist.
