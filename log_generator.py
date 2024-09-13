@@ -65,16 +65,19 @@ def get_random_dates(days=7) -> datetime:
     """
     start_date = datetime.datetime.now()
     end_date = start_date - timedelta(days=days)
+# jfrog-ignore
     random_date = start_date + (end_date - start_date) * random.random()
 
     return random_date 
 
 def get_fake_ipv4():
+# jfrog-ignore
     return ".".join(map(str, (random.randint(0, 255) 
                         for _ in range(4))))
 
 def get_fake_ipv6():
     M = 16**4
+# jfrog-ignore
     return ":".join(("%x" % random.randint(0, M) for i in range(8)))
 
 def get_random_user():
@@ -84,11 +87,13 @@ def get_random_user():
                 "upload_user",
                 "jenkins",
                 "non_authenticated_user"]
+# jfrog-ignore    
     return userlist[random.randint(0,len(userlist) -1)]
                     
 
 def get_random_method():
     methods = ["DELETE","GET","HEAD","OPTIONS","PATCH","POST","PUT"]
+# jfrog-ignore    
     return methods[random.randint(0,len(methods) -1)]
     
 def get_random_response_code():
@@ -103,14 +108,17 @@ def get_random_response_code():
              404,
              405,
              500]
+# jfrog-ignore
     return codes[random.randint(0,len(codes) -1)]
 
 def get_random_content_length():
+# jfrog-ignore
     return random.randint(0, 9999999999)
     
 def gen_v6_line(protocol):
     timestamp = datetime.datetime.strftime(get_random_dates(days=7),
                   '%Y%m%d%H%M%S')
+# jfrog-ignore
     request_duration = random.randint(1,1100)
     request_type = "REQUEST"
     # remote_address = get_fake_ipv4
@@ -130,7 +138,9 @@ def gen_v6_line(protocol):
     return line
 
 def gen_v7in_line():
+# jfrog-ignore
     timestamp = get_random_dates(days=7).isoformat()
+# jfrog-ignore
     request_duration = random.randint(1,1100)
     request_type = "REQUEST"
     # remote_address = get_fake_ipv4()
