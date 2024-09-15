@@ -138,10 +138,49 @@ def gen_v6_line(protocol):
     return line
 
 def gen_v7in_line(protocol):
+    """
+    This is the definition of the request log format for v7 of the JFrog platform. The fields are as follow
+    Timestamp | Trace ID | Remote Address | Username | Request method | Request URL | Return Status | Request Content Length | Response Content Length | Request Duration | Request User Agent
+    
+    The source for this information is https://jfrog.com/help/r/jfrog-platform-administration-documentation/request-log
+    """
 # jfrog-ignore
     timestamp = get_random_dates(days=7).isoformat()
+
 # jfrog-ignore
     request_duration = random.randint(1,1100)
+    request_traceid = ''.join(random.choices('0123456789abcdef', k=16))
+    request_type = "REQUEST"
+    # remote_address = get_fake_ipv4()
+    remote_address = get_fake_ipv6() 
+    username = get_random_user()
+    request_method = get_random_method()
+    request_url = "/home/" + get_random_user() + "/" + get_random_user() + ".zip"
+    protocol_version = "HTTP/1.1"
+    return_status = get_random_response_code()
+    request_content_length = get_random_content_length()
+    response_content_length = get_random_content_length()
+    request_user_agent = "JFrog Access Java Client/4.1.12"
+
+    
+    line = f"{timestamp}|{request_traceid}|{remote_address}|{username}|{request_method}|{request_url}|{return_status}|{request_content_length}|{response_content_length}|{request_duration}|{request_user_agent}"
+    return line 
+ 
+def gen_v7out_line(protocol):
+    """
+    This is the definition of the request log format for v7 outbound request log of the JFrog platform. The fields are as follow
+    Timestamp | Trace ID | Remote Repository Name | Username | Request method | Request URL | Return Status | Request Content Length | Response Content Length | Request Duration
+
+    
+    The source for this information is https://jfrog.com/help/r/jfrog-platform-administration-documentation/outbound-request-log
+    """
+# jfrog-ignore
+    timestamp = get_random_dates(days=7).isoformat()
+
+# jfrog-ignore
+    request_duration = random.randint(1,1100)
+    request_traceid = ''.join(random.choices('0123456789abcdef', k=16))
+    request_repository_name = "generic-remote"
     request_type = "REQUEST"
     # remote_address = get_fake_ipv4()
     remote_address = get_fake_ipv6() 
@@ -151,10 +190,11 @@ def gen_v7in_line(protocol):
     protocol_version = "HTTP/1.1"
     response_code = get_random_response_code()
     request_content_length = get_random_content_length()
-    
-    line = f"{timestamp}|{request_duration}|{request_type}|{remote_address}|{username}|{request_method}|{request_url}|{protocol_version}|{response_code}|{request_content_length}"
-    return line  
+    response_content_length = get_random_content_length()
 
+    
+    line = f"{timestamp}|{request_traceid}|{request_repository_name}|{username}|{request_method}|{request_url}|{response_code}|{request_content_length}|{response_content_length}|{request_duration}"
+    return line  
 
 def main():
     """
@@ -180,6 +220,9 @@ def main():
         elif args.type == "v7in":
             for lines in range(args.numlines):
                 logfile.write(gen_v7in_line(args.protocol) + '\n')
+        elif args.type == "v7out":
+            for lines in range(args.numlines):
+                logfile.write(gen_v7out_line(args.protocol) + '\n')
     
     
 if __name__ == '__main__':
