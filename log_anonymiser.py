@@ -57,10 +57,10 @@ def main():
             print("v7in")
         anonymise_v7in_logfile(args.input, args.outputfile)
     
-    elif logfile_version == "v7out":
-        if args.debug:
-            print("v7out")
-        anonymise_v7out_logfile(args.input, args.outputfile)
+    # elif logfile_version == "v7out":
+    #     if args.debug:
+    #         print("v7out")
+    #     anonymise_v7out_logfile(args.input, args.outputfile)
 
     else:
         if args.debug:

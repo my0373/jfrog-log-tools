@@ -5,47 +5,52 @@ def anonymise_v6_logfile(input_logfile, output_logfile):
     """
     Anonymise a v6 log file.
     """
-    with open(input_logfile, "r") as infile, open(output_logfile, "w") as outfile:
-        for line in infile:
-            tmpline = line.split("|")
-            timestamp = tmpline[0]
-            request_duration = tmpline[1]
-            request_type = tmpline[2]
-            remote_address = "ADDRESS_REDACTED"
-            username = "USER_REDACTED"
-            request_method = tmpline[5]
-            request_url = "URL_REDACTED"
-            protocol_version = tmpline[7]
-            response_code = tmpline[8]
-            request_content_length = tmpline[9]
-            
-            anonymised_line = f"{timestamp}|{request_duration}|{request_type}|{remote_address}|{username}|{request_method}|{request_url}|{protocol_version}|{response_code}|{request_content_length}\n".strip()
-            outfile.write(anonymised_line + '\n')
-        
+    try:
+        with open(input_logfile, "r") as infile, open(output_logfile, "w") as outfile:
+            for line in infile:
+                tmpline = line.split("|")
+                timestamp = tmpline[0]
+                request_duration = tmpline[1]
+                request_type = tmpline[2]
+                remote_address = "ADDRESS_REDACTED"
+                username = "USER_REDACTED"
+                request_method = tmpline[5]
+                request_url = "URL_REDACTED"
+                protocol_version = tmpline[7]
+                response_code = tmpline[8]
+                request_content_length = tmpline[9]
+                
+                anonymised_line = f"{timestamp}|{request_duration}|{request_type}|{remote_address}|{username}|{request_method}|{request_url}|{protocol_version}|{response_code}|{request_content_length}\n".strip()
+                outfile.write(anonymised_line + '\n')
+    except IndexError:
+        return False
 
 
 def anonymise_v7in_logfile(input_logfile, output_logfile):
     """
     Anonymise a v7in log file.
     """
-    with open(input_logfile, "r") as infile, open(output_logfile, "w") as outfile:
-        for line in infile:
-            tmpline = line.split("|")
-            timestamp = tmpline[0]
-            request_traceid = tmpline[1]
-            remote_address = "ADDRESS_REDACTED"
-            username = "USER_REDACTED"
-            request_method = tmpline[4]
-            request_url = "URL_REDACTED"
-            return_status = tmpline[6]
-            request_content_length = tmpline[7]
-            response_content_length = tmpline[8]
-            request_duration = tmpline[9]
-            request_user_agent = tmpline[10]
-            
-            anonymised_line = f"{timestamp}|{request_traceid}|{remote_address}|{username}|{request_method}|{request_url}|{return_status}|{request_content_length}|{response_content_length}|{request_duration}|{request_user_agent}"
-    
-            outfile.write(anonymised_line.strip() + '\n')
+    try:
+        with open(input_logfile, "r") as infile, open(output_logfile, "w") as outfile:
+            for line in infile:
+                tmpline = line.split("|")
+                timestamp = tmpline[0]
+                request_traceid = tmpline[1]
+                remote_address = "ADDRESS_REDACTED"
+                username = "USER_REDACTED"
+                request_method = tmpline[4]
+                request_url = "URL_REDACTED"
+                return_status = tmpline[6]
+                request_content_length = tmpline[7]
+                response_content_length = tmpline[8]
+                request_duration = tmpline[9]
+                request_user_agent = tmpline[10]
+                
+                anonymised_line = f"{timestamp}|{request_traceid}|{remote_address}|{username}|{request_method}|{request_url}|{return_status}|{request_content_length}|{response_content_length}|{request_duration}|{request_user_agent}"
+        
+                outfile.write(anonymised_line.strip() + '\n')
+    except IndexError:
+        return False
         
 
 def anonymise_v7out_logfile(input_logfile, output_logfile):
@@ -53,7 +58,7 @@ def anonymise_v7out_logfile(input_logfile, output_logfile):
     Anonymise a v7out log file.
     """
     #TODO: Implement this function
-    pass
+    return True
 
 def validate_v6_line(first_line):
     """
@@ -74,6 +79,9 @@ def validate_v6_line(first_line):
     return True 
 
 def validate_v7in_line(first_line):
+    #TODO: Update this function to look for more than just the first field. 
+    # Both v7in and out share the same date so it can misidentify the version.
+
     timefield =  first_line.split("|")[0]
 
     try:
