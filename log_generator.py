@@ -137,7 +137,7 @@ def gen_v6_line(protocol):
     line = f"{timestamp}|{request_duration}|{request_type}|{remote_address}|{username}|{request_method}|{request_url}|{protocol_version}|{response_code}|{request_content_length}"
     return line
 
-def gen_v7in_line():
+def gen_v7in_line(protocol):
 # jfrog-ignore
     timestamp = get_random_dates(days=7).isoformat()
 # jfrog-ignore
@@ -176,10 +176,10 @@ def main():
 
         if args.type == "v6":
             for lines in range(args.numlines):
-                logfile.write(gen_v6_line() + '\n')
+                logfile.write(gen_v6_line(args.protocol) + '\n')
         elif args.type == "v7in":
             for lines in range(args.numlines):
-                logfile.write(gen_v7in_line() + '\n')
+                logfile.write(gen_v7in_line(args.protocol) + '\n')
     
     
 if __name__ == '__main__':
