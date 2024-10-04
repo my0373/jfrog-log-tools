@@ -1,4 +1,4 @@
-name: "charmr-docker-build"
+name: "docker-build"
 on:
   push:
     branches:
@@ -37,7 +37,7 @@ jobs:
             working-directory: .
             run: |
               jf docker build -t ${IMAGE_NAME} .
-              jf docker push ${IMAGE_NAME} --module=charmr --project=${{ vars.JFROG_PROJECT }} --build-name=${{ vars.JFROG_CLI_BUILD_NAME}} --build-number=${{ github.run_number }}
+              jf docker push ${IMAGE_NAME} --module=${{ vars.JFROG_MODULE}} --project=${{ vars.JFROG_PROJECT }} --build-name=${{ vars.JFROG_CLI_BUILD_NAME}} --build-number=${{ github.run_number }}
               docker image list
               
           - name: Publish Build info With JFrog CLI
