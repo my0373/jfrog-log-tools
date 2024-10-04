@@ -86,3 +86,5 @@ We can also test the file exists after we exit the container.
 $ head -1 /tmp/destlogs/requestprocessed.log
 2024-09-11T19:23:20.782144|ab7acd630aa9a21d|ADDRESS_REDACTED|USER_REDACTED|GET|URL_REDACTED|201|3805396537|7827564335|385|JFrog Access Java Client/4.1.12
 ```
+
+mytest
