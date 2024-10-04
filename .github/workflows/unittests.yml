@@ -33,11 +33,11 @@ jobs:
             run: jf pip-config --global=true --repo-resolve=charmr-pypi
 
           - name: Install dependencies 
-            working-directory: ./source/charmrapi
+            working-directory: .
             run: |
               pip install -r requirements.txt
 
           - name: Run unit tests
-            working-directory: ./source/charmrapi
+            working-directory: .
             run: |
-              pytest -v src/
+              pytest -v jfrog_utils/
