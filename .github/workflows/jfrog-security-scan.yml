@@ -1,4 +1,4 @@
-name: "charmr-scan"
+name: "jfrog-audit"
 on:
   push:
     branches:

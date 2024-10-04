@@ -1,4 +1,4 @@
-name: "charmr-unittests"
+name: "python-unittests"
 on:
   push:
     branches:
