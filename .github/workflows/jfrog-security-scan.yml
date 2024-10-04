@@ -1,8 +1,8 @@
 name: "jfrog-audit"
 on:
-  push:
-    branches:
-      - '**'
+  # push:
+  #   branches:
+  #     - '**'
   pull_request:
     branches:
       - '**'
