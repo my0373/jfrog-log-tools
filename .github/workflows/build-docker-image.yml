@@ -1,0 +1,62 @@
+name: "docker-build"
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - 'main'
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_REPO: ${{ vars.DOCKER_REPO}}
+      #IMAGE_NAME: matthewy.jfrog.io/charmr-docker/${{ vars.JFROG_CLI_BUILD_NAME}}:${{ github.run_number }}'
+      IMAGE_NAME: ${{ secrets.JF_HOST}}/${{ vars.DOCKER_REPO}}/${{vars.JFROG_CLI_BUILD_NAME}}:${{ github.run_number }}
+    permissions:
+      id-token: write
+      contents: read
+      actions: read 
+      attestations: write    
+      packages: write
+    steps:
+          - name: Checkout
+            uses: actions/checkout@v4
+            
+          - name: Setup JFrog CLI
+            uses: jfrog/setup-jfrog-cli@v4
+            env:  
+              JF_URL: ${{ secrets.JF_URL }}
+              JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+              
+          - name: Set CLI Config
+            run: jf pip-config --global=true --repo-resolve=${{ vars.JFROG_PIP_REPO }}
+      
+          - name: Build Tag and push Docker Image
+            working-directory: .
+            run: |
+              jf docker build -t ${IMAGE_NAME} .
+              jf docker push ${IMAGE_NAME} --module=${{ vars.JFROG_MODULE}} --project=${{ vars.JFROG_PROJECT }} --build-name=${{ vars.JFROG_CLI_BUILD_NAME}} --build-number=${{ github.run_number }}
+              docker image list
+              
+          - name: Publish Build info With JFrog CLI
+            env:
+              # Generated and maintained by GitHub
+              JFROG_CLI_BUILD_NAME: ${{ vars.JFROG_CLI_BUILD_NAME}}
+
+              # JFrog organization secret
+              JFROG_CLI_BUILD_NUMBER : ${{ github.run_number }}
+            run: |
+              # Export the build name and build nuber
+              # Collect environment variables for the build
+              # jf bs  ${{ vars.JFROG_CLI_BUILD_NAME}} ${{ github.run_number }} 
+
+              jf rt build-collect-env --project=${{ vars.JFROG_PROJECT }} ${{ vars.JFROG_CLI_BUILD_NAME}} ${{ github.run_number }} 
+              
+              # Collect VCS details from git and add them to the build
+              jf rt build-add-git --project=${{ vars.JFROG_PROJECT }} ${{ vars.JFROG_CLI_BUILD_NAME}} ${{ github.run_number }} 
+              
+              # Publish build info
+              jf rt build-publish --project=${{ vars.JFROG_PROJECT }} ${{ vars.JFROG_CLI_BUILD_NAME}} ${{ github.run_number }} 
+
