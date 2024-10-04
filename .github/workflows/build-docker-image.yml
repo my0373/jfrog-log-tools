@@ -34,7 +34,7 @@ jobs:
             run: jf pip-config --global=true --repo-resolve=${{ vars.JFROG_PIP_REPO }}
       
           - name: Build Tag and push Docker Image
-            working-directory: ./source/charmrapi
+            working-directory: .
             run: |
               jf docker build -t ${IMAGE_NAME} .
               jf docker push ${IMAGE_NAME} --module=charmr --project=${{ vars.JFROG_PROJECT }} --build-name=${{ vars.JFROG_CLI_BUILD_NAME}} --build-number=${{ github.run_number }}
