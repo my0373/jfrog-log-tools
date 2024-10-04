@@ -1,0 +1,43 @@
+name: "charmr-unittests"
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_REPO: ${{ vars.DOCKER_REPO}}
+      IMAGE_NAME: ${{ vars.JFROG_CLI_BUILD_NAME}}:${{ github.run_number }}'
+    permissions:
+      id-token: write
+      contents: read
+      actions: read 
+      attestations: write    
+      packages: write
+    steps:
+          - name: Checkout
+            uses: actions/checkout@v4
+            
+          - name: Setup JFrog CLI
+            uses: jfrog/setup-jfrog-cli@v4
+            env:  
+              JF_URL: ${{ secrets.JF_URL }}
+              JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+              
+          - name: Set CLI Config
+            run: jf pip-config --global=true --repo-resolve=charmr-pypi
+
+          - name: Install dependencies 
+            working-directory: ./source/charmrapi
+            run: |
+              pip install -r requirements.txt
+
+          - name: Run unit tests
+            working-directory: ./source/charmrapi
+            run: |
+              pytest -v src/
